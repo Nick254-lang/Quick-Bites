@@ -1,0 +1,21 @@
+restaurant-system/
+│
+├── client/
+│   ├── pages/
+│   │   ├── home.html
+│   │   ├── menu.html
+│   │   ├── booking.html
+│   │   ├── contact.html
+│   │   ├── login.html
+│   │   ├── register.html
+│   │
+│   ├── css/
+│   │   ├── style.css
+│   │
+│   ├── js/
+│   │   ├── firebase.js
+│   │   ├── auth.js
+│   │   ├── main.js
+│
+└── server/
+    ├── server.js   (leave for later)
