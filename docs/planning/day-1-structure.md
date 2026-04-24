@@ -1,0 +1,24 @@
+restaurant-system/
+│
+├── client/
+│   ├── assets/
+│   │   ├── css/
+│   │   │   └── style.css
+│   │   └── js/
+│   │       ├── firebase.js
+│   │       ├── auth.js
+│   │       └── main.js
+│   │
+│   ├── pages/
+│   │   ├── home.html
+│   │   ├── menu.html
+│   │   ├── booking.html
+│   │   ├── contact.html
+│   │   ├── login.html
+│   │   ├── register.html
+│
+└── server/
+    ├── index.js
+    └── config/
+        ├── firebaseAdmin.js
+        └── serviceAccountKey.json
