@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import Navbar from '@/components/Navbar';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://myrestaurant.app'),
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body>
         <Navbar />
         {children}
+        <Analytics />
       </body>
     </html>
   );
