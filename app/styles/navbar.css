@@ -70,6 +70,294 @@
   .navbar ul.active {
     display: flex;
   }
+
+  .profile-modal {
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    width: auto;
+  }
+}
+
+/* PROFILE MODAL */
+.profile-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+}
+
+.profile-modal {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  background: var(--white);
+  width: 100%;
+  max-width: 350px;
+  max-height: calc(100vh - 80px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow-y: auto;
+  z-index: 1000;
+  animation: slideDown 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.profile-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f0f0f0;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark, #c0392b) 100%);
+  position: sticky;
+  top: 0;
+  z-index: 1001;
+}
+
+.profile-modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: white;
+  font-weight: 600;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  border-radius: 4px;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.profile-modal-content {
+  padding: 16px 16px;
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+}
+
+.profile-section {
+  margin-bottom: 16px;
+}
+
+.profile-section:last-of-type {
+  margin-bottom: 8px;
+}
+
+.profile-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 8px;
+}
+
+.current-user-card {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 3px solid var(--primary);
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.profile-field:last-child {
+  margin-bottom: 0;
+}
+
+.profile-field label {
+  font-weight: 700;
+  color: #666;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.profile-field span {
+  color: #333;
+  font-size: 13px;
+  word-break: break-all;
+}
+
+.accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.account-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #e8e8e8;
+}
+
+.account-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.account-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.account-email {
+  color: #999;
+  font-size: 11px;
+  word-break: break-all;
+}
+
+.account-actions {
+  display: flex;
+  gap: 5px;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.btn-small {
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+.btn-switch {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-switch:hover {
+  background: #a93226;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(192, 57, 43, 0.3);
+}
+
+.btn-remove {
+  background: #f0f0f0;
+  color: #d32f2f;
+}
+
+.btn-remove:hover {
+  background: #e0e0e0;
+}
+
+.profile-actions {
+  padding-top: 12px;
+  border-top: 1px solid #e8e8e8;
+}
+
+.btn-add-account {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  background: #f0f0f0;
+  color: var(--primary);
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: 1px solid #ddd;
+}
+
+.btn-add-account:hover {
+  background: #e8e8e8;
+  border-color: var(--primary);
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  width: fit-content;
+  letter-spacing: 0.3px;
+}
+
+.role-badge-admin {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.role-badge-customer {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.role-badge-rider {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* USER PILL AS BUTTON */
+.user-pill {
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #f0f0f0;
+  border: none;
+  color: #333;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.user-pill:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(192, 57, 43, 0.3);
 }
 
 /* DARK MODE */
@@ -83,4 +371,96 @@ body.dark .navbar a {
 
 body.dark .navbar ul {
   background: #1e1e1e;
+}
+
+body.dark .profile-modal {
+  background: #2d2d2d;
+}
+
+body.dark .profile-modal-header {
+  background: linear-gradient(135deg, #a93226 0%, #7b241c 100%);
+}
+
+body.dark .profile-modal-header h3 {
+  color: #e0e0e0;
+}
+
+body.dark .close-button {
+  color: #e0e0e0;
+}
+
+body.dark .close-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+body.dark .profile-field label {
+  color: #b0b0b0;
+}
+
+body.dark .profile-field span {
+  color: #d0d0d0;
+}
+
+body.dark .user-pill {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+}
+
+body.dark .user-pill:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+body.dark .profile-section-label {
+  color: #777;
+}
+
+body.dark .current-user-card {
+  background: #333;
+  border-left-color: #e74c3c;
+}
+
+body.dark .account-item {
+  background: #333;
+  border-color: #444;
+}
+
+body.dark .account-name {
+  color: #e0e0e0;
+}
+
+body.dark .account-email {
+  color: #999;
+}
+
+body.dark .btn-switch {
+  background: #e74c3c;
+  color: white;
+}
+
+body.dark .btn-switch:hover {
+  background: #c0392b;
+}
+
+body.dark .btn-remove {
+  background: #444;
+  color: #ff6b6b;
+}
+
+body.dark .btn-remove:hover {
+  background: #555;
+}
+
+body.dark .profile-actions {
+  border-top-color: #444;
+}
+
+body.dark .btn-add-account {
+  background: #333;
+  color: #e74c3c;
+  border-color: #444;
+}
+
+body.dark .btn-add-account:hover {
+  background: #3a3a3a;
+  border-color: #e74c3c;
 }

@@ -1,12 +1,13 @@
 'use client';
 
 import type { JSX } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import type { SessionUser } from '@/lib/types';
 import { useCart } from '@/components/useCart';
+import { useMultiAuth } from '@/components/useMultiAuth';
 import { auth } from '@/lib/firebase';
 
 type Theme = 'light' | 'dark';
@@ -23,9 +24,11 @@ export default function Navbar(): JSX.Element {
   const router = useRouter();
   const pathname = usePathname();
   const { count } = useCart();
+  const { users, currentUser, isLoading, switchUser, removeUser, logout } = useMultiAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [theme, setTheme] = useState<Theme>('light');
-  const [user, setUser] = useState<SessionUser | null>(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const profileModalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
@@ -35,17 +38,26 @@ export default function Navbar(): JSX.Element {
 
   useEffect(() => {
     setIsMenuOpen(false);
+    setShowProfileModal(false);
   }, [pathname]);
 
   useEffect(() => {
-    const loadUser = async () => {
-      const response = await fetch('/api/auth/me', { cache: 'no-store' });
-      const data = (await response.json()) as { user: SessionUser | null };
-      setUser(data.user);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileModalRef.current && !profileModalRef.current.contains(event.target as Node)) {
+        setShowProfileModal(false);
+      }
     };
 
-    void loadUser();
-  }, [pathname]);
+    if (showProfileModal) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return undefined;
+  }, [showProfileModal]);
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const toggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
@@ -54,18 +66,10 @@ export default function Navbar(): JSX.Element {
     document.body.dataset.theme = nextTheme;
   };
 
-  const handleLogout = async () => {
-    await signOut(auth).catch(() => undefined);
-    await fetch('/api/auth/logout', { method: 'POST' });
-    setUser(null);
-    router.push('/');
-    router.refresh();
-  };
-
   const staffLink =
-    user?.role === 'admin'
+    currentUser?.role === 'admin'
       ? { href: '/admin/dashboard', label: 'Admin' }
-      : user?.role === 'rider'
+      : currentUser?.role === 'rider'
         ? { href: '/rider/dashboard', label: 'Rider' }
         : null;
 
@@ -116,9 +120,16 @@ export default function Navbar(): JSX.Element {
             <button type="button" className="theme-toggle" onClick={toggleTheme}>
               {theme === 'dark' ? 'Light' : 'Dark'}
             </button>
-            {user ? (
+            {currentUser ? (
               <>
-                <span className="user-pill">{user.name}</span>
+                <button
+                  type="button"
+                  className="user-pill"
+                  onClick={() => setShowProfileModal(!showProfileModal)}
+                  aria-label="Show profile details"
+                >
+                  {currentUser.name}
+                </button>
                 <button type="button" className="ghost-button" onClick={handleLogout}>
                   Logout
                 </button>
@@ -136,6 +147,86 @@ export default function Navbar(): JSX.Element {
           </div>
         </div>
       </nav>
+
+      {currentUser && showProfileModal && (
+        <div className="profile-modal-overlay">
+          <div className="profile-modal" ref={profileModalRef}>
+            <div className="profile-modal-header">
+              <h3>Profile</h3>
+              <button
+                type="button"
+                className="close-button"
+                onClick={() => setShowProfileModal(false)}
+                aria-label="Close profile modal"
+              >
+                ×
+              </button>
+            </div>
+            <div className="profile-modal-content">
+              <div className="profile-section">
+                <div className="profile-section-label">Current Account</div>
+                <div className="current-user-card">
+                  <div className="profile-field">
+                    <label>Name:</label>
+                    <span>{currentUser.name}</span>
+                  </div>
+                  <div className="profile-field">
+                    <label>Email:</label>
+                    <span>{currentUser.email}</span>
+                  </div>
+                  <div className="profile-field">
+                    <label>Role:</label>
+                    <span className={`role-badge role-badge-${currentUser.role}`}>
+                      {currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {users.length > 1 && (
+                <div className="profile-section">
+                  <div className="profile-section-label">Other Accounts ({users.length - 1})</div>
+                  <div className="accounts-list">
+                    {users.map(user => (
+                      user.id !== currentUser.id && (
+                        <div key={user.id} className="account-item">
+                          <div className="account-info">
+                            <div className="account-name">{user.name}</div>
+                            <div className="account-email">{user.email}</div>
+                          </div>
+                          <div className="account-actions">
+                            <button
+                              type="button"
+                              className="btn-small btn-switch"
+                              onClick={() => switchUser(user.id)}
+                            >
+                              Switch
+                            </button>
+                            <button
+                              type="button"
+                              className="btn-small btn-remove"
+                              onClick={() => removeUser(user.id)}
+                              title="Remove account"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      )
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="profile-actions">
+                <Link href="/login" className="btn-add-account">
+                  + Add Another Account
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

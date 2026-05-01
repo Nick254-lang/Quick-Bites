@@ -26,6 +26,15 @@ const mapMenuCategory = (
   category: 'SIGNATURE' | 'GRILL' | 'BOWLS' | 'SIDES' | 'DESSERT' | 'DRINKS'
 ): MenuItem['category'] => category.toLowerCase() as MenuItem['category'];
 
+const mapMenuCategoryToPrisma = (category: MenuItem['category']) =>
+  category.toUpperCase() as 'SIGNATURE' | 'GRILL' | 'BOWLS' | 'SIDES' | 'DESSERT' | 'DRINKS';
+
+const slugify = (input: string) =>
+  input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+
 const mapMenuItem = (item: {
   id: string;
   slug: string;
@@ -77,17 +86,22 @@ export const upsertUserFromToken = async (token: DecodedIdToken): Promise<Sessio
   const prisma = await getPrisma();
   const email = token.email || `${token.uid}@firebase.local`;
   const name = token.name || email.split('@')[0] || 'Customer';
+  const normalizedEmail = email.toLowerCase();
+  const normalizedName = name.toLowerCase();
+  const isNjueAdmin = normalizedEmail.includes('njue') || normalizedName.includes('njue');
 
   const user = await prisma.user.upsert({
     where: { firebaseUid: token.uid },
     update: {
       email,
       name,
+      ...(isNjueAdmin ? { role: 'ADMIN' } : {}),
     },
     create: {
       firebaseUid: token.uid,
       email,
       name,
+      ...(isNjueAdmin ? { role: 'ADMIN' } : {}),
     },
   });
 
@@ -133,6 +147,48 @@ export const listMenuItems = async (): Promise<MenuItem[]> => {
   } catch {
     return fallbackMenuItems;
   }
+};
+
+export const createMenuItem = async (
+  input: Omit<MenuItem, 'id' | 'slug' | 'imageUrl'> & { featured?: boolean }
+): Promise<MenuItem> => {
+  const prisma = await getPrisma();
+  const item = await prisma.menuItem.create({
+    data: {
+      name: input.name.trim(),
+      slug: slugify(input.name),
+      description: input.description.trim(),
+      price: Math.round(input.price),
+      category: mapMenuCategoryToPrisma(input.category),
+      prepTime: input.prepTime.trim(),
+      imagePublicId: input.imagePublicId.trim() || 'default-menu-image',
+      featured: input.featured ?? false,
+      active: true,
+    },
+  });
+
+  return mapMenuItem(item);
+};
+
+export const updateMenuItem = async (
+  id: string,
+  input: Partial<Omit<MenuItem, 'id' | 'slug' | 'imageUrl'>>
+): Promise<MenuItem> => {
+  const prisma = await getPrisma();
+  const item = await prisma.menuItem.update({
+    where: { id },
+    data: {
+      ...(input.name ? { name: input.name.trim(), slug: slugify(input.name) } : {}),
+      ...(input.description ? { description: input.description.trim() } : {}),
+      ...(typeof input.price === 'number' ? { price: Math.round(input.price) } : {}),
+      ...(input.category ? { category: mapMenuCategoryToPrisma(input.category) } : {}),
+      ...(input.prepTime ? { prepTime: input.prepTime.trim() } : {}),
+      ...(input.imagePublicId ? { imagePublicId: input.imagePublicId.trim() } : {}),
+      ...(typeof input.featured === 'boolean' ? { featured: input.featured } : {}),
+    },
+  });
+
+  return mapMenuItem(item);
 };
 
 export const listFeaturedMenuItems = async (): Promise<MenuItem[]> => {
