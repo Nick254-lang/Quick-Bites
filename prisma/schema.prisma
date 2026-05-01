@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+  RIDER
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  OUT_FOR_DELIVERY
+  DELIVERED
+}
+
+enum MenuCategory {
+  SIGNATURE
+  GRILL
+  BOWLS
+  SIDES
+  DESSERT
+  DRINKS
+}
+
+model User {
+  id          String   @id @default(cuid())
+  firebaseUid String   @unique
+  name        String
+  email       String   @unique
+  role        UserRole @default(CUSTOMER)
+  orders      Order[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MenuItem {
+  id            String       @id @default(cuid())
+  slug          String       @unique
+  name          String
+  description   String
+  price         Int
+  category      MenuCategory
+  prepTime      String
+  imagePublicId String
+  featured      Boolean      @default(false)
+  active        Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  userId          String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customerName    String
+  customerEmail   String
+  deliveryAddress String
+  notes           String?
+  total           Int
+  status          OrderStatus @default(PENDING)
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([userId, createdAt])
+}
+
+model OrderItem {
+  id       String @id @default(cuid())
+  orderId  String
+  order    Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  name     String
+  quantity Int
+  price    Int
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  date      String
+  time      String
+  guests    Int
+  notes     String?
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}

@@ -1,101 +1,50 @@
-import type { NextRequest } from 'next/server';
-import { db } from '@/lib/firebaseAdmin';
-import type { OrderCreateInput, OrderItem, OrderRecord } from '@/lib/types';
-
-const isOrderItem = (value: unknown): value is OrderItem => {
-  if (typeof value !== 'object' || value === null) {
-    return false;
-  }
-
-  const item = value as Partial<OrderItem>;
-  return (
-    typeof item.name === 'string' &&
-    typeof item.quantity === 'number' &&
-    typeof item.price === 'number'
-  );
-};
-
-const toOrderRecord = (
-  id: string,
-  data: FirebaseFirestore.DocumentData
-): OrderRecord => ({
-  id,
-  userId: typeof data.userId === 'string' ? data.userId : '',
-  items: Array.isArray(data.items) ? data.items.filter(isOrderItem) : [],
-  total: typeof data.total === 'number' ? data.total : 0,
-  status: data.status === 'confirmed' || data.status === 'out_for_delivery' || data.status === 'delivered'
-    ? data.status
-    : 'pending',
-  createdAt:
-    data.createdAt instanceof Date
-      ? data.createdAt.toISOString()
-      : data.createdAt?.toDate instanceof Function
-        ? data.createdAt.toDate().toISOString()
-        : null,
-});
-
-const parseCreateOrderInput = (body: unknown): OrderCreateInput | null => {
-  if (typeof body !== 'object' || body === null) {
-    return null;
-  }
-
-  const { userId, items, total } = body as Partial<OrderCreateInput>;
-
-  if (
-    typeof userId !== 'string' ||
-    !Array.isArray(items) ||
-    !items.every(isOrderItem) ||
-    typeof total !== 'number'
-  ) {
-    return null;
-  }
-
-  return { userId, items, total };
-};
+import { getSessionUser } from '@/lib/session';
+import { parseOrderCreateInput } from '@/lib/validation';
 
 export const GET = async () => {
   try {
-    const snapshot = await db.collection('orders').get();
-    const orders = snapshot.docs.map((doc) => toOrderRecord(doc.id, doc.data()));
+    const { listOrders, listOrdersForUser } = await import('@/lib/db');
+    const user = await getSessionUser();
+
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const orders =
+      user.role === 'customer'
+        ? await listOrdersForUser(user.id)
+        : await listOrders();
 
     return Response.json(orders);
-  } catch (err: unknown) {
-    console.error('Orders fetch error:', err);
+  } catch (error: unknown) {
     return Response.json(
-      { error: err instanceof Error ? err.message : 'Failed to fetch orders' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch orders' },
       { status: 500 }
     );
   }
 };
 
-export const POST = async (req: NextRequest) => {
+export const POST = async (request: Request) => {
   try {
-    const body: unknown = await req.json();
-    const input = parseCreateOrderInput(body);
+    const { createOrder } = await import('@/lib/db');
+    const user = await getSessionUser();
 
-    if (!input) {
-      return Response.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+    if (!user) {
+      return Response.json({ error: 'Please log in to place an order' }, { status: 401 });
     }
 
-    const orderRef = await db.collection('orders').add({
-      userId: input.userId,
-      items: input.items,
-      total: input.total,
-      status: 'pending',
-      createdAt: new Date(),
-    });
+    const body: unknown = await request.json();
+    const input = parseOrderCreateInput(body);
 
+    if (!input) {
+      return Response.json({ error: 'Invalid order details' }, { status: 400 });
+    }
+
+    const order = await createOrder(input, user);
+    return Response.json(order, { status: 201 });
+  } catch (error: unknown) {
     return Response.json(
-      { orderId: orderRef.id },
-      { status: 201 }
-    );
-  } catch (err: unknown) {
-    console.error('Order creation error:', err);
-    return Response.json(
-      { error: err instanceof Error ? err.message : 'Failed to create order' },
+      { error: error instanceof Error ? error.message : 'Failed to create order' },
       { status: 500 }
     );
   }

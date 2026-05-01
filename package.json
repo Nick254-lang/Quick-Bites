@@ -6,19 +6,28 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint app components lib --ext .js,.jsx"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
+    "@prisma/client": "^7.7.0",
+    "cloudinary": "^2.3.0",
     "firebase": "^10.12.0",
-    "firebase-admin": "^10.3.0",
+    "firebase-admin": "^13.1.0",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.5.15",
+    "@types/react": "19.2.14",
     "@typescript-eslint/eslint-plugin": "^8.58.2",
     "@typescript-eslint/parser": "^8.58.2",
+    "dotenv": "^16.6.1",
     "eslint": "^9.0.0",
     "eslint-config-next": "^15.0.0",
     "eslint-import-resolver-node": "^0.3.10",
@@ -27,8 +36,11 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "prisma": "^7.7.0",
+    "tsx": "^4.19.3",
     "tsconfig-paths": "^4.2.0"
   },
+  "packageManager": "pnpm@10.33.2",
   "keywords": [],
   "author": "",
   "license": "ISC"

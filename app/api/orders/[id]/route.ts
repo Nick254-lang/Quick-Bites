@@ -1,6 +1,5 @@
-import type { NextRequest } from 'next/server';
-import { db } from '@/lib/firebaseAdmin';
-import { ORDER_STATUSES, type OrderRecord, type OrderUpdateInput } from '@/lib/types';
+import { getSessionUser } from '@/lib/session';
+import { parseOrderStatus } from '@/lib/validation';
 
 interface RouteContext {
   params: Promise<{
@@ -8,69 +7,62 @@ interface RouteContext {
   }>;
 }
 
-const isOrderStatus = (value: unknown): value is OrderUpdateInput['status'] =>
-  typeof value === 'string' &&
-  ORDER_STATUSES.includes(value as OrderUpdateInput['status']);
-
-const toOrderRecord = (
-  id: string,
-  data: FirebaseFirestore.DocumentData
-): OrderRecord => ({
-  id,
-  userId: typeof data.userId === 'string' ? data.userId : '',
-  items: Array.isArray(data.items) ? data.items : [],
-  total: typeof data.total === 'number' ? data.total : 0,
-  status: isOrderStatus(data.status) ? data.status : 'pending',
-  createdAt:
-    data.createdAt instanceof Date
-      ? data.createdAt.toISOString()
-      : data.createdAt?.toDate instanceof Function
-        ? data.createdAt.toDate().toISOString()
-        : null,
-});
-
-export const GET = async (_req: NextRequest, { params }: RouteContext) => {
+export const GET = async (_request: Request, { params }: RouteContext) => {
   try {
-    const { id } = await params;
-    const doc = await db.collection('orders').doc(id).get();
+    const { getOrderById } = await import('@/lib/db');
+    const user = await getSessionUser();
 
-    if (!doc.exists) {
-      return Response.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      );
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    return Response.json(toOrderRecord(doc.id, doc.data() ?? {}));
-  } catch (err: unknown) {
-    console.error('Orders fetch error:', err);
+    const { id } = await params;
+    const order = await getOrderById(id);
+
+    if (!order) {
+      return Response.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    if (user.role === 'customer' && order.userId !== user.id) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    return Response.json(order);
+  } catch (error: unknown) {
     return Response.json(
-      { error: err instanceof Error ? err.message : 'Failed to fetch order' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch order' },
       { status: 500 }
     );
   }
 };
 
-export const PUT = async (req: NextRequest, { params }: RouteContext) => {
+export const PUT = async (request: Request, { params }: RouteContext) => {
   try {
-    const { id } = await params;
-    const body: unknown = await req.json();
-    const status = (body as Partial<OrderUpdateInput>)?.status;
+    const { updateOrderStatus } = await import('@/lib/db');
+    const user = await getSessionUser();
 
-    if (!isOrderStatus(status)) {
-      return Response.json(
-        { error: 'Status is required' },
-        { status: 400 }
-      );
+    if (!user || (user.role !== 'admin' && user.role !== 'rider')) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    await db.collection('orders').doc(id).update({ status });
+    const body = (await request.json()) as { status?: unknown };
+    const status = parseOrderStatus(body.status);
 
-    return Response.json({ message: 'Order updated successfully' });
-  } catch (err: unknown) {
-    console.error('Order update error:', err);
+    if (!status) {
+      return Response.json({ error: 'Invalid status' }, { status: 400 });
+    }
+
+    const { id } = await params;
+    const updatedOrder = await updateOrderStatus(id, status);
+
+    if (!updatedOrder) {
+      return Response.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    return Response.json(updatedOrder);
+  } catch (error: unknown) {
     return Response.json(
-      { error: err instanceof Error ? err.message : 'Failed to update order' },
+      { error: error instanceof Error ? error.message : 'Failed to update order' },
       { status: 500 }
     );
   }

@@ -1,11 +1,22 @@
 import './globals.css';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import Navbar from '@/components/Navbar';
 
 export const metadata: Metadata = {
-  title: 'MyRestaurant',
-  description: 'Order your favorite meals anytime',
+  metadataBase: new URL('https://myrestaurant.app'),
+  title: {
+    default: 'MyRestaurant',
+    template: '%s | MyRestaurant',
+  },
+  description: 'A full-service restaurant ordering app for delivery, dine-in reservations, and live operations.',
+  applicationName: 'MyRestaurant',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#f15a24',
 };
 
 interface RootLayoutProps {

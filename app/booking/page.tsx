@@ -1,25 +1,68 @@
 'use client';
 
-import type { FormEvent } from 'react';
+import type { FormEvent, JSX } from 'react';
+import { useState } from 'react';
 
-export default function Booking(): JSX.Element {
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Booking submitted');
-    // TODO: Connect to Firebase
+export default function BookingPage(): JSX.Element {
+  const [status, setStatus] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    setSubmitting(true);
+    setStatus('');
+
+    const response = await fetch('/api/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: formData.get('name'),
+        email: formData.get('email'),
+        date: formData.get('date'),
+        time: formData.get('time'),
+        guests: Number(formData.get('guests')),
+        notes: formData.get('notes'),
+      }),
+    });
+
+    const data = (await response.json()) as { error?: string };
+
+    setSubmitting(false);
+
+    if (!response.ok) {
+      setStatus(data.error ?? 'Unable to save reservation.');
+      return;
+    }
+
+    event.currentTarget.reset();
+    setStatus('Reservation received. We will contact you to confirm.');
   };
 
   return (
-    <main className="container">
-      <h1>Reserve a Table</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Your Name" required />
-        <input type="email" placeholder="Your Email" required />
-        <input type="date" required />
-        <input type="time" required />
-        <input type="number" placeholder="Number of Guests" min="1" max="10" required />
-        <button type="submit" className="btn">Reserve Table</button>
-      </form>
+    <main className="container page-shell">
+      <section className="form-shell">
+        <div>
+          <p className="eyebrow">Reserve</p>
+          <h1>Book a table without leaving the app</h1>
+          <p className="section-copy">
+            Great for date nights, team lunches, and weekend groups. Reservations are stored instantly.
+          </p>
+        </div>
+        <form onSubmit={handleSubmit} className="card">
+          <input name="name" type="text" placeholder="Your name" required />
+          <input name="email" type="email" placeholder="Your email" required />
+          <input name="date" type="date" required />
+          <input name="time" type="time" required />
+          <input name="guests" type="number" placeholder="Number of guests" min="1" max="20" required />
+          <textarea name="notes" placeholder="Special requests" rows={4} />
+          {status ? <p className="status-banner">{status}</p> : null}
+          <button type="submit" className="btn" disabled={submitting}>
+            {submitting ? 'Saving...' : 'Reserve table'}
+          </button>
+        </form>
+      </section>
     </main>
   );
 }

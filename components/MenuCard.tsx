@@ -1,36 +1,83 @@
 'use client';
 
 import type { JSX } from 'react';
+import { useState } from 'react';
+import type { MenuItem } from '@/lib/types';
+import { useCart } from '@/components/useCart';
 
-interface MenuItem {
-  id: number;
-  name: string;
-  price: number;
-}
-
-const menuItems: MenuItem[] = [
-  { id: 1, name: 'Burger', price: 500 },
-  { id: 2, name: 'Pizza', price: 1200 },
-  { id: 3, name: 'Fries', price: 300 },
+const categories: Array<MenuItem['category'] | 'all'> = [
+  'all',
+  'signature',
+  'grill',
+  'bowls',
+  'sides',
+  'dessert',
+  'drinks',
 ];
 
-export default function MenuCard(): JSX.Element {
+interface MenuCardProps {
+  items: MenuItem[];
+}
+
+export default function MenuCard({ items }: MenuCardProps): JSX.Element {
+  const [category, setCategory] = useState<(typeof categories)[number]>('all');
+  const [message, setMessage] = useState('');
+  const { addItem } = useCart();
+
+  const filteredItems =
+    category === 'all'
+      ? items
+      : items.filter((item) => item.category === category);
+
   const handleAddToCart = (item: MenuItem) => {
-    console.log('Added to cart:', item);
-    // TODO: Implement cart functionality
+    addItem(item);
+    setMessage(`${item.name} added to cart.`);
+    window.setTimeout(() => setMessage(''), 2000);
   };
 
   return (
-    <div id="menu" className="menu-grid">
-      {menuItems.map((item) => (
-        <div key={item.id} className="card">
-          <h3>{item.name}</h3>
-          <p>KES {item.price}</p>
-          <button type="button" onClick={() => handleAddToCart(item)}>
-            Add to Cart
-          </button>
+    <section className="menu-section">
+      <div className="menu-toolbar">
+        <div>
+          <p className="eyebrow">Fresh from the kitchen</p>
+          <h2>Designed for delivery and dine-in</h2>
         </div>
-      ))}
-    </div>
+        <div className="pill-row" aria-label="Menu filters">
+          {categories.map((entry) => (
+            <button
+              key={entry}
+              type="button"
+              className={`pill ${category === entry ? 'pill-active' : ''}`}
+              onClick={() => setCategory(entry)}
+            >
+              {entry === 'all' ? 'All' : entry.replace('_', ' ')}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {message ? <p className="status-banner">{message}</p> : null}
+
+      <div id="menu" className="menu-grid">
+        {filteredItems.map((item) => (
+          <article key={item.id} className="card menu-card">
+            <img src={item.imageUrl} alt={item.name} className="menu-card-image" />
+            <div className="menu-card-body">
+              <div className="menu-card-header">
+                <h3>{item.name}</h3>
+                <span>KES {item.price}</span>
+              </div>
+              <p>{item.description}</p>
+              <div className="menu-card-footer">
+                <small>{item.prepTime}</small>
+                <button type="button" onClick={() => handleAddToCart(item)}>
+                  Add to cart
+                </button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
