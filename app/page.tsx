@@ -27,7 +27,7 @@ export default async function Home(): Promise<JSX.Element> {
         <div className="hero-panel card fade-in">
           <div className="stats-grid">
             <div>
-              <strong>6</strong>
+              <strong>12</strong>
               <span>chef-curated dishes</span>
             </div>
             <div>

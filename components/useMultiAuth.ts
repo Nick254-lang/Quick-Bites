@@ -5,6 +5,7 @@ import type { SessionUser } from '@/lib/types';
 
 const MULTI_AUTH_KEY = 'multi_auth_sessions';
 const CURRENT_USER_KEY = 'current_user_id';
+const AUTH_SESSION_EVENT = 'multi-auth-session-change';
 
 interface StoredUser extends SessionUser {
   timestamp: number;
@@ -31,12 +32,15 @@ export const useMultiAuth = () => {
             setUsers(sessionUsers);
 
             // Set current user
-            const current = currentId 
-              ? sessionUsers.find(u => u.id === currentId) 
-              : sessionUsers[sessionUsers.length - 1];
+            const current = (
+              currentId
+                ? sessionUsers.find(u => u.id === currentId)
+                : null
+            ) ?? sessionUsers[sessionUsers.length - 1];
             
             if (current) {
               setCurrentUser(current);
+              localStorage.setItem(CURRENT_USER_KEY, current.id);
             }
           } else {
             // Fallback to fetching current user
@@ -62,6 +66,13 @@ export const useMultiAuth = () => {
     };
 
     loadUsers();
+    window.addEventListener(AUTH_SESSION_EVENT, loadUsers);
+    window.addEventListener('storage', loadUsers);
+
+    return () => {
+      window.removeEventListener(AUTH_SESSION_EVENT, loadUsers);
+      window.removeEventListener('storage', loadUsers);
+    };
   }, []);
 
   const addUser = (user: SessionUser) => {

@@ -473,6 +473,213 @@ td span {
   padding: 0.7rem 1rem;
 }
 
+.profile-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(35, 23, 17, 0.32);
+  backdrop-filter: blur(3px);
+}
+
+.profile-modal {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: min(24rem, calc(100vw - 2rem));
+  background: var(--surface-strong);
+  border-right: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: profileSlideIn 0.28s ease both;
+}
+
+@keyframes profileSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.profile-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(135deg, var(--primary), #ff9d59);
+  color: white;
+}
+
+.profile-modal-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.close-button {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.profile-modal-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+
+.profile-section {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.profile-section-label {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.current-user-card,
+.account-item {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+}
+
+.current-user-card {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.profile-field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.profile-field label {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.profile-field span {
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.role-badge {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  background: var(--accent);
+  color: var(--text);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.role-badge-admin {
+  background: rgba(255, 216, 181, 0.9);
+}
+
+.role-badge-rider {
+  background: rgba(209, 236, 241, 0.9);
+}
+
+.role-badge-customer {
+  background: rgba(212, 237, 218, 0.9);
+}
+
+.accounts-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.account-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.9rem;
+}
+
+.account-name {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.account-email {
+  color: var(--muted);
+  font-size: 0.88rem;
+  overflow-wrap: anywhere;
+}
+
+.account-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.btn-small {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.45rem 0.7rem;
+  background: var(--surface-strong);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.btn-switch {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-remove {
+  color: var(--primary-dark);
+}
+
+.profile-actions {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.btn-add-account {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-radius: 999px;
+  padding: 0.8rem 1rem;
+  background: var(--accent);
+  color: var(--text);
+  font-weight: 700;
+}
+
 .fade-in {
   animation: fadeIn 0.6s ease both;
 }
@@ -544,5 +751,13 @@ td span {
 
   .hero h1 {
     font-size: 2.5rem;
+  }
+
+  .account-item {
+    grid-template-columns: 1fr;
+  }
+
+  .account-actions {
+    justify-content: flex-start;
   }
 }

@@ -143,7 +143,24 @@ export const listMenuItems = async (): Promise<MenuItem[]> => {
       return fallbackMenuItems;
     }
 
-    return items.map(mapMenuItem);
+    const fallbackBySlug = new Map(fallbackMenuItems.map((item) => [item.slug, item]));
+    const mappedItems = items.map(mapMenuItem).map((item) => {
+      const fallback = fallbackBySlug.get(item.slug);
+
+      if (fallback && item.imagePublicId.startsWith('myrestaurant/menu/')) {
+        return {
+          ...item,
+          imagePublicId: fallback.imagePublicId,
+          imageUrl: fallback.imageUrl,
+        };
+      }
+
+      return item;
+    });
+    const storedSlugs = new Set(mappedItems.map((item) => item.slug));
+    const missingFallbackItems = fallbackMenuItems.filter((item) => !storedSlugs.has(item.slug));
+
+    return [...mappedItems, ...missingFallbackItems];
   } catch {
     return fallbackMenuItems;
   }

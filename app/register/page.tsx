@@ -7,6 +7,21 @@ import { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { getRegisterErrorMessage } from '@/lib/firebaseAuthErrors';
+import type { SessionUser } from '@/lib/types';
+
+const MULTI_AUTH_KEY = 'multi_auth_sessions';
+const CURRENT_USER_KEY = 'current_user_id';
+const AUTH_SESSION_EVENT = 'multi-auth-session-change';
+
+const storeSessionUser = (user: SessionUser) => {
+  const stored = localStorage.getItem(MULTI_AUTH_KEY);
+  const users = stored ? (JSON.parse(stored) as Array<SessionUser & { timestamp?: number }>) : [];
+  const nextUsers = [...users.filter((item) => item.id !== user.id), { ...user, timestamp: Date.now() }];
+
+  localStorage.setItem(MULTI_AUTH_KEY, JSON.stringify(nextUsers));
+  localStorage.setItem(CURRENT_USER_KEY, user.id);
+  window.dispatchEvent(new Event(AUTH_SESSION_EVENT));
+};
 
 export default function RegisterPage(): JSX.Element {
   const router = useRouter();
@@ -38,13 +53,17 @@ export default function RegisterPage(): JSX.Element {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idToken }),
       });
-      const data = (await response.json()) as { error?: string };
+      const data = (await response.json()) as { user?: SessionUser; error?: string };
 
       setSubmitting(false);
 
       if (!response.ok) {
         setStatus(data.error ?? 'Unable to register.');
         return;
+      }
+
+      if (data.user) {
+        storeSessionUser(data.user);
       }
 
       router.push('/orders');

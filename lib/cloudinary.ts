@@ -7,8 +7,12 @@ cloudinary.config({
   secure: true,
 });
 
-export const buildCloudinaryImageUrl = (publicId: string): string =>
-  cloudinary.url(publicId, {
+export const buildCloudinaryImageUrl = (publicId: string): string => {
+  if (publicId.startsWith('http://') || publicId.startsWith('https://')) {
+    return publicId;
+  }
+
+  return cloudinary.url(publicId, {
     secure: true,
     quality: 'auto',
     fetch_format: 'auto',
@@ -16,6 +20,7 @@ export const buildCloudinaryImageUrl = (publicId: string): string =>
     width: 800,
     height: 600,
   });
+};
 
 export const createCloudinaryUploadSignature = (folder: string) => {
   const timestamp = Math.round(Date.now() / 1000);
