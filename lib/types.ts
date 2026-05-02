@@ -27,6 +27,7 @@ export interface MenuItem {
   price: number;
   category: MenuCategory;
   prepTime: string;
+  calories?: number;
   imagePublicId: string;
   imageUrl: string;
   featured?: boolean;

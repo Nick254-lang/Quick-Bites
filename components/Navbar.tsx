@@ -84,6 +84,10 @@ export default function Navbar(): JSX.Element {
         ? { href: '/rider/dashboard', label: 'Rider' }
         : null;
 
+  const navLinks = currentUser
+    ? [...customerLinks, { href: '/giftcards', label: 'Gift Cards' }]
+    : customerLinks;
+
   return (
     <>
       <header className="site-header">
@@ -108,7 +112,7 @@ export default function Navbar(): JSX.Element {
 
           <div className={`nav-panel ${isMenuOpen ? 'nav-panel-open' : ''}`}>
             <ul className="nav-links">
-              {customerLinks.map((link) => (
+              {navLinks.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className={pathname === link.href ? 'nav-active' : ''}>
                     {link.label}

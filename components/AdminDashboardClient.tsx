@@ -75,40 +75,49 @@ export default function AdminDashboardClient(): JSX.Element {
               <th>Address</th>
               <th>Total</th>
               <th>Status</th>
+              <th>Type</th>
               <th>Items</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
-              <tr key={order.id}>
-                <td>
-                  <strong>{order.customerName}</strong>
-                  <span>{order.customerEmail}</span>
-                </td>
-                <td>{order.deliveryAddress}</td>
-                <td>KES {order.total}</td>
-                <td>
-                  <span className={`status-chip status-${order.status}`}>{order.status}</span>
-                </td>
-                <td>{order.items.reduce((sum, item) => sum + item.quantity, 0)}</td>
-                <td className="action-row">
-                  {STATUS_ACTIONS.map((status) => (
-                    <button
-                      key={status}
-                      type="button"
-                      disabled={order.status === status}
-                      onClick={() => updateOrderStatus(order.id, status)}
-                    >
-                      {status.replaceAll('_', ' ')}
-                    </button>
-                  ))}
-                </td>
-              </tr>
-            ))}
+            {orders.map((order) => {
+              const isGiftCardOrder = order.items.some((item) => item.name.startsWith('Gift Card'));
+              return (
+                <tr key={order.id}>
+                  <td>
+                    <strong>{order.customerName}</strong>
+                    <span>{order.customerEmail}</span>
+                  </td>
+                  <td>{order.deliveryAddress}</td>
+                  <td>KES {order.total}</td>
+                  <td>
+                    <span className={`status-chip status-${order.status}`}>{order.status}</span>
+                  </td>
+                  <td>
+                    <span className={`status-chip ${isGiftCardOrder ? 'status-confirmed' : 'status-pending'}`}>
+                      {isGiftCardOrder ? 'Gift Card' : 'Food'}
+                    </span>
+                  </td>
+                  <td>{order.items.reduce((sum, item) => sum + item.quantity, 0)}</td>
+                  <td className="action-row">
+                    {STATUS_ACTIONS.map((status) => (
+                      <button
+                        key={status}
+                        type="button"
+                        disabled={order.status === status}
+                        onClick={() => updateOrderStatus(order.id, status)}
+                      >
+                        {status.replaceAll('_', ' ')}
+                      </button>
+                    ))}
+                  </td>
+                </tr>
+              );
+            })}
             {orders.length === 0 ? (
               <tr>
-                <td colSpan={6} className="empty-cell">
+                <td colSpan={7} className="empty-cell">
                   No orders yet.
                 </td>
               </tr>

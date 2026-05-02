@@ -150,12 +150,16 @@ export const listMenuItems = async (): Promise<MenuItem[]> => {
       if (fallback && item.imagePublicId.startsWith('myrestaurant/menu/')) {
         return {
           ...item,
+          calories: fallback.calories,
           imagePublicId: fallback.imagePublicId,
           imageUrl: fallback.imageUrl,
         };
       }
 
-      return item;
+      return {
+        ...item,
+        calories: fallback?.calories,
+      };
     });
     const storedSlugs = new Set(mappedItems.map((item) => item.slug));
     const missingFallbackItems = fallbackMenuItems.filter((item) => !storedSlugs.has(item.slug));

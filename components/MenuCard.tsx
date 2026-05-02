@@ -16,6 +16,8 @@ const categories: Array<MenuItem['category'] | 'all'> = [
   'drinks',
 ];
 
+const shouldBypassImageOptimizer = (src: string) => src.includes('images.unsplash.com');
+
 interface MenuCardProps {
   items: MenuItem[];
 }
@@ -70,6 +72,7 @@ export default function MenuCard({ items }: MenuCardProps): JSX.Element {
               className="menu-card-image"
               sizes="(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 33vw"
               preload={index < 2}
+              unoptimized={shouldBypassImageOptimizer(item.imageUrl)}
             />
             <div className="menu-card-body">
               <div className="menu-card-header">
@@ -78,7 +81,10 @@ export default function MenuCard({ items }: MenuCardProps): JSX.Element {
               </div>
               <p>{item.description}</p>
               <div className="menu-card-footer">
-                <small>{item.prepTime}</small>
+                <div className="menu-meta">
+                  <small>{item.prepTime}</small>
+                  {item.calories ? <small>{item.calories} cal</small> : null}
+                </div>
                 <button type="button" onClick={() => handleAddToCart(item)}>
                   Add to cart
                 </button>

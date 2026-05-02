@@ -1,6 +1,9 @@
 import type { JSX } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import HomeExtras from '@/components/HomeExtras';
+
+const shouldBypassImageOptimizer = (src: string) => src.includes('images.unsplash.com');
 
 export default async function Home(): Promise<JSX.Element> {
   const { listFeaturedMenuItems } = await import('@/lib/db');
@@ -63,6 +66,7 @@ export default async function Home(): Promise<JSX.Element> {
                 className="menu-card-image"
                 sizes="(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 preload={index === 0}
+                unoptimized={shouldBypassImageOptimizer(item.imageUrl)}
               />
               <div className="menu-card-body">
                 <div className="menu-card-header">
@@ -70,11 +74,14 @@ export default async function Home(): Promise<JSX.Element> {
                   <span>KES {item.price}</span>
                 </div>
                 <p>{item.description}</p>
+                {item.calories ? <small className="menu-calories">{item.calories} cal</small> : null}
               </div>
             </article>
           ))}
         </div>
       </section>
+
+      <HomeExtras />
     </main>
   );
 }

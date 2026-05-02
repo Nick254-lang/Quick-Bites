@@ -50,7 +50,7 @@ export const useCart = () => {
     [items]
   );
 
-  const addItem = (menuItem: MenuItem): void => {
+  const addItem = (menuItem: MenuItem | CartItem): void => {
     const currentItems = readCart();
     const existing = currentItems.find((item) => item.id === menuItem.id);
     const nextItems = existing
