@@ -2,6 +2,7 @@
 
 import type { JSX } from 'react';
 import { useState } from 'react';
+import Image from 'next/image';
 import type { MenuItem } from '@/lib/types';
 import { useCart } from '@/components/useCart';
 
@@ -59,9 +60,17 @@ export default function MenuCard({ items }: MenuCardProps): JSX.Element {
       {message ? <p className="status-banner">{message}</p> : null}
 
       <div id="menu" className="menu-grid">
-        {filteredItems.map((item) => (
+        {filteredItems.map((item, index) => (
           <article key={item.id} className="card menu-card">
-            <img src={item.imageUrl} alt={item.name} className="menu-card-image" />
+            <Image
+              src={item.imageUrl}
+              alt={item.name}
+              width={800}
+              height={600}
+              className="menu-card-image"
+              sizes="(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              preload={index < 2}
+            />
             <div className="menu-card-body">
               <div className="menu-card-header">
                 <h3>{item.name}</h3>
