@@ -3,6 +3,7 @@
 import type { JSX } from 'react';
 import { useEffect, useState } from 'react';
 import type { OrderRecord, OrderStatus } from '@/lib/types';
+import CloudinaryMenuUploader from '@/components/CloudinaryMenuUploader';
 
 const STATUS_ACTIONS: OrderStatus[] = ['confirmed', 'out_for_delivery', 'delivered'];
 
@@ -64,6 +65,8 @@ export default function AdminDashboardClient(): JSX.Element {
         </div>
         <p>{orders.length} live orders in the pipeline.</p>
       </div>
+
+      <CloudinaryMenuUploader />
 
       {error ? <p className="status-banner status-error">{error}</p> : null}
 
