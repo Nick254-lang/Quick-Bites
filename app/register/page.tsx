@@ -3,7 +3,7 @@
 import type { FormEvent, JSX } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { getRegisterErrorMessage } from '@/lib/firebaseAuthErrors';
@@ -23,7 +23,7 @@ const storeSessionUser = (user: SessionUser) => {
   window.dispatchEvent(new Event(AUTH_SESSION_EVENT));
 };
 
-export default function RegisterPage(): JSX.Element {
+function RegisterPageContent(): JSX.Element {
   const router = useRouter();
   const searchParams = useSearchParams();
   const requestedRole = searchParams.get('role');
@@ -119,5 +119,13 @@ export default function RegisterPage(): JSX.Element {
         </form>
       </section>
     </main>
+  );
+}
+
+export default function RegisterPage(): JSX.Element {
+  return (
+    <Suspense fallback={null}>
+      <RegisterPageContent />
+    </Suspense>
   );
 }
