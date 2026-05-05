@@ -25,6 +25,9 @@ export default async function Home(): Promise<JSX.Element> {
             <Link href="/booking" className="btn btn-secondary">
               Reserve a table
             </Link>
+            <Link href="/register?role=rider" className="btn btn-secondary">
+              Join as rider
+            </Link>
           </div>
         </div>
 

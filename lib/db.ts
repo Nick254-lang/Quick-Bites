@@ -82,26 +82,32 @@ const mapOrder = (order: {
   items: order.items,
 });
 
-export const upsertUserFromToken = async (token: DecodedIdToken): Promise<SessionUser> => {
+export const upsertUserFromToken = async (
+  token: DecodedIdToken,
+  role?: UserRole
+): Promise<SessionUser> => {
   const prisma = await getPrisma();
   const email = token.email || `${token.uid}@firebase.local`;
   const name = token.name || email.split('@')[0] || 'Customer';
   const normalizedEmail = email.toLowerCase();
   const normalizedName = name.toLowerCase();
   const isNjueAdmin = normalizedEmail.includes('njue') || normalizedName.includes('njue');
+  const requestedPrismaRole = !isNjueAdmin && role ? (role === 'rider' ? 'RIDER' : 'CUSTOMER') : undefined;
 
   const user = await prisma.user.upsert({
     where: { firebaseUid: token.uid },
     update: {
       email,
       name,
-      ...(isNjueAdmin ? { role: 'ADMIN' } : {}),
+      ...(isNjueAdmin ? { role: 'ADMIN' as const } : {}),
+      ...(requestedPrismaRole ? { role: requestedPrismaRole as any } : {}),
     },
     create: {
       firebaseUid: token.uid,
       email,
       name,
-      ...(isNjueAdmin ? { role: 'ADMIN' } : {}),
+      ...(isNjueAdmin ? { role: 'ADMIN' as const } : {}),
+      ...(requestedPrismaRole ? { role: requestedPrismaRole as any } : {}),
     },
   });
 

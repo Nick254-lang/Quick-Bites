@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Project Documentation</title><style>
+body{font-family:sans-serif;line-height:1.5;padding:24px;max-width:960px;margin:auto;} h1,h2,h3{color:#222;} pre{background:#f4f4f4;padding:12px;overflow:auto;} code{background:#f4f4f4;padding:2px 4px;border-radius:4px;} ul,ol{margin:0 0 16px 20px;} blockquote{border-left:4px solid #ccc;padding-left:16px;color:#555;margin:0 0 16px;} hr{border:none;border-top:1px solid #ddd;margin:24px 0;} a{color:#0066cc;text-decoration:none;} a:hover{text-decoration:underline;}
+</style></head><body>
+<h1>Project Documentation</h1>
+<p>Generated from repository documentation files.</p>
+<h2>Project README</h2>
+<h1>MyRestaurant - Full-Stack Restaurant Ordering System</h1>
+
+<p>A comprehensive, production-ready restaurant application built with modern web technologies. This app enables customers to browse menus, place orders, reserve tables, and purchase gift cards, while providing admin and rider dashboards for operational management.</p>
+
+<h2>Features</h2>
+
+<h3>Customer Features</h3>
+<ul>
+<li>**User Authentication**: Secure registration and login using Firebase Auth with session cookies</li>
+<li>**Menu Browsing**: Interactive menu with categories, pricing, and high-quality images</li>
+<li>**Shopping Cart**: Persistent local cart with quantity management</li>
+<li>**Order Placement**: Seamless checkout with delivery details and order history</li>
+<li>**Table Reservations**: Book tables for dine-in experiences</li>
+<li>**Gift Cards**: Purchase and send digital gift cards</li>
+<li>**Contact Form**: Submit inquiries and feedback</li>
+<li>**Responsive Design**: Mobile-first UI with dark/light theme support</li>
+</ul>
+
+<h3>Admin Features</h3>
+<ul>
+<li>**Order Management**: View, update, and track order statuses (pending → confirmed → out for delivery → delivered)</li>
+<li>**Dashboard Overview**: Real-time order pipeline and operational insights</li>
+<li>**Order Type Distinction**: Identifies food orders vs. gift card purchases</li>
+</ul>
+
+<h3>Rider Features</h3>
+<ul>
+<li>**Dispatch Management**: Update order statuses for delivery tracking</li>
+<li>**Order History**: View assigned deliveries and completion status</li>
+</ul>
+
+<h3>Technical Features</h3>
+<ul>
+<li>**Image Management**: Cloudinary integration for menu image storage and optimization</li>
+<li>**Database**: PostgreSQL with Prisma ORM for robust data management</li>
+<li>**Authentication**: Firebase Auth with server-side session validation</li>
+<li>**API Routes**: RESTful endpoints for all operations</li>
+<li>**Type Safety**: Full TypeScript implementation</li>
+<li>**Performance**: Optimized with Next.js App Router and Vercel deployment</li>
+</ul>
+
+<h2>Tech Stack</h2>
+
+<ul>
+<li>**Frontend**: Next.js 16 (App Router), React 19, TypeScript</li>
+<li>**Styling**: CSS Modules with custom design system</li>
+<li>**Backend**: Next.js API Routes</li>
+<li>**Database**: PostgreSQL with Prisma ORM</li>
+<li>**Authentication**: Firebase Auth</li>
+<li>**Image Storage**: Cloudinary</li>
+<li>**Deployment**: Vercel (standalone output)</li>
+<li>**Package Manager**: pnpm</li>
+</ul>
+
+<h2>Prerequisites</h2>
+
+<p>Before running this project, ensure you have the following installed:</p>
+
+<ul>
+<li>**Node.js**: Version 18 or higher</li>
+<li>**pnpm**: Package manager (install with `npm install -g pnpm`)</li>
+<li>**PostgreSQL**: Database server (local or cloud instance)</li>
+<li>**Firebase Project**: For authentication</li>
+<li>**Cloudinary Account**: For image management</li>
+</ul>
+
+<h2>Installation</h2>
+
+<ol>
+<li>**Clone the repository**:</li>
+</ol>
+<p>   <code><code><code>bash</p>
+<p>   git clone &lt;repository-url&gt;</p>
+<p>   cd project-3</p>
+<p>   <code><code><code></p>
+
+<ol>
+<li>**Install dependencies**:</li>
+</ol>
+<p>   <code><code><code>bash</p>
+<p>   pnpm install</p>
+<p>   <code><code><code></p>
+
+<ol>
+<li>**Set up environment variables**:</li>
+</ol>
+<p>   Copy <code>.env.example<code> to <code>.env.local<code> and fill in the required values:</p>
+<p>   <code><code><code>bash</p>
+<p>   cp .env.example .env.local</p>
+<p>   <code><code><code></p>
+
+<p>   Required environment variables:</p>
+<p>   - <code>DATABASE_URL<code>: PostgreSQL connection string</p>
+<p>   - <code>NEXT_PUBLIC_FIREBASE_API_KEY<code>: Firebase API key</p>
+<p>   - <code>NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN<code>: Firebase auth domain</p>
+<p>   - <code>NEXT_PUBLIC_FIREBASE_PROJECT_ID<code>: Firebase project ID</p>
+<p>   - <code>FIREBASE_CLIENT_EMAIL<code>: Firebase service account email</p>
+<p>   - <code>FIREBASE_PRIVATE_KEY<code>: Firebase service account private key</p>
+<p>   - <code>CLOUDINARY_CLOUD_NAME<code>: Cloudinary cloud name</p>
+<p>   - <code>CLOUDINARY_API_KEY<code>: Cloudinary API key</p>
+<p>   - <code>CLOUDINARY_API_SECRET<code>: Cloudinary API secret</p>
+
+<h2>Database Setup</h2>
+
+<ol>
+<li>**Generate Prisma client**:</li>
+</ol>
+<p>   <code><code><code>bash</p>
+<p>   pnpm db:generate</p>
+<p>   <code><code><code></p>
+
+<ol>
+<li>**Push database schema**:</li>
+</ol>
+<p>   <code><code><code>bash</p>
+<p>   pnpm db:push</p>
+<p>   <code><code><code></p>
+
+<ol>
+<li>**Seed the database** (optional, adds sample data):</li>
+</ol>
+<p>   <code><code><code>bash</p>
+<p>   pnpm db:seed</p>
+<p>   <code><code><code></p>
+
+<h2>Running the Application</h2>
+
+<ol>
+<li>**Start development server**:</li>
+</ol>
+<p>   <code><code><code>bash</p>
+<p>   pnpm dev</p>
+<p>   <code><code><code></p>
+
+<ol>
+<li>**Open your browser** and navigate to `http://localhost:3000`</li>
+</ol>
+
+<h2>Usage</h2>
+
+<h3>For Customers</h3>
+<ol>
+<li>**Register/Login**: Create an account or sign in</li>
+<li>**Browse Menu**: View available items by category</li>
+<li>**Add to Cart**: Select items and quantities</li>
+<li>**Checkout**: Provide delivery details and place order</li>
+<li>**Track Orders**: View order history and status</li>
+<li>**Reserve Tables**: Book tables for dine-in</li>
+<li>**Purchase Gift Cards**: Select value and send to recipients</li>
+</ol>
+
+<h3>For Admins</h3>
+<ol>
+<li>**Access Dashboard**: Navigate to `/admin/dashboard`</li>
+<li>**Manage Orders**: Update order statuses and view details</li>
+<li>**Monitor Operations**: Track order pipeline</li>
+</ol>
+
+<h3>For Riders</h3>
+<ol>
+<li>**Access Dashboard**: Navigate to `/rider/dashboard`</li>
+<li>**Update Deliveries**: Change order status as deliveries progress</li>
+</ol>
+
+<h2>API Endpoints</h2>
+
+<h3>Authentication</h3>
+<ul>
+<li>`GET /api/auth/me` - Get current user session</li>
+<li>`POST /api/auth/login` - User login</li>
+<li>`POST /api/auth/logout` - User logout</li>
+<li>`POST /api/auth/register` - User registration</li>
+</ul>
+
+<h3>Orders</h3>
+<ul>
+<li>`GET /api/orders` - List orders (filtered by user role)</li>
+<li>`POST /api/orders` - Create new order</li>
+<li>`PUT /api/orders/[id]` - Update order status</li>
+</ul>
+
+<h3>Bookings</h3>
+<ul>
+<li>`GET /api/bookings` - List bookings</li>
+<li>`POST /api/bookings` - Create table reservation</li>
+</ul>
+
+<h3>Menu</h3>
+<ul>
+<li>`GET /api/menu` - List menu items</li>
+</ul>
+
+<h3>Contact</h3>
+<ul>
+<li>`POST /api/contact` - Submit contact form</li>
+</ul>
+
+<h3>Uploads</h3>
+<ul>
+<li>`POST /api/uploads/signature` - Upload signature images</li>
+</ul>
+
+<h2>Database Schema</h2>
+
+<h3>User</h3>
+<ul>
+<li>`id`: String (Primary Key)</li>
+<li>`firebaseUid`: String</li>
+<li>`name`: String</li>
+<li>`email`: String</li>
+<li>`role`: UserRole (customer/admin/rider)</li>
+<li>`createdAt`: DateTime</li>
+</ul>
+
+<h3>MenuItem</h3>
+<ul>
+<li>`id`: String (Primary Key)</li>
+<li>`slug`: String</li>
+<li>`name`: String</li>
+<li>`description`: String</li>
+<li>`price`: Float</li>
+<li>`category`: MenuCategory</li>
+<li>`prepTime`: String</li>
+<li>`calories`: Int (Optional)</li>
+<li>`imagePublicId`: String</li>
+<li>`imageUrl`: String</li>
+<li>`featured`: Boolean (Optional)</li>
+</ul>
+
+<h3>Order</h3>
+<ul>
+<li>`id`: String (Primary Key)</li>
+<li>`userId`: String (Foreign Key to User)</li>
+<li>`customerName`: String</li>
+<li>`customerEmail`: String</li>
+<li>`deliveryAddress`: String</li>
+<li>`notes`: String (Optional)</li>
+<li>`total`: Float</li>
+<li>`status`: OrderStatus</li>
+<li>`createdAt`: DateTime</li>
+<li>`items`: OrderItem[]</li>
+</ul>
+
+<h3>Booking</h3>
+<ul>
+<li>`id`: String (Primary Key)</li>
+<li>`name`: String</li>
+<li>`email`: String</li>
+<li>`date`: String</li>
+<li>`time`: String</li>
+<li>`guests`: Int</li>
+<li>`notes`: String (Optional)</li>
+<li>`createdAt`: DateTime</li>
+</ul>
+
+<h3>Contact</h3>
+<ul>
+<li>`id`: String (Primary Key)</li>
+<li>`name`: String</li>
+<li>`email`: String</li>
+<li>`message`: String</li>
+<li>`createdAt`: DateTime</li>
+</ul>
+
+<h2>Deployment</h2>
+
+<p>This app is configured for deployment on Vercel:</p>
+
+<ol>
+<li>**Connect Repository**: Link your GitHub repository to Vercel</li>
+<li>**Set Environment Variables**: Configure all required env vars in Vercel dashboard</li>
+<li>**Deploy**: Vercel will automatically build and deploy using the standalone output</li>
+</ol>
+
+<h3>Build Commands</h3>
+<ul>
+<li>**Build**: `pnpm build`</li>
+<li>**Start**: `pnpm start`</li>
+</ul>
+
+<h2>Scripts</h2>
+
+<ul>
+<li>`pnpm dev` - Start development server</li>
+<li>`pnpm build` - Build for production</li>
+<li>`pnpm start` - Start production server</li>
+<li>`pnpm lint` - Run ESLint</li>
+<li>`pnpm typecheck` - Run TypeScript type checking</li>
+<li>`pnpm db:generate` - Generate Prisma client</li>
+<li>`pnpm db:push` - Push database schema</li>
+<li>`pnpm db:seed` - Seed database with sample data</li>
+</ul>
+
+<h2>Project Structure</h2>
+
+<pre><code>
+project-3/
+├── app/                    # Next.js App Router pages
+│   ├── admin/dashboard/    # Admin dashboard
+│   ├── api/                # API routes
+│   ├── booking/            # Table reservation page
+│   ├── checkout/           # Order checkout
+│   ├── contact/            # Contact form
+│   ├── giftcards/          # Gift card purchase
+│   ├── login/              # User login
+│   ├── menu/               # Menu browsing
+│   ├── orders/             # Order history
+│   ├── register/           # User registration
+│   └── rider/dashboard/    # Rider dashboard
+├── components/             # Reusable React components
+├── lib/                    # Utility functions and configurations
+├── prisma/                 # Database schema and migrations
+├── public/                 # Static assets
+└── styles/                 # Additional CSS files
+</code></pre>
+
+<h2>Contributing</h2>
+
+<ol>
+<li>Fork the repository</li>
+<li>Create a feature branch: `git checkout -b feature/your-feature`</li>
+<li>Make your changes and commit: `git commit -am &#x27;Add new feature&#x27;`</li>
+<li>Push to the branch: `git push origin feature/your-feature`</li>
+<li>Submit a pull request</li>
+</ol>
+
+<h2>License</h2>
+
+<p>This project is licensed under the ISC License - see the LICENSE file for details.</p>
+
+<h2>Support</h2>
+
+<p>For questions or issues, please open an issue on the GitHub repository or contact the development team.</p>
+
+<hr/>
+
+<p>**Built with ❤️ using Next.js, Prisma, and Firebase**</p>
+<h2>Migration Complete</h2>
+<h1>✅ Migration Complete: Express → Next.js with Firebase</h1>
+
+<h2>🎯 Summary</h2>
+
+<p>Your project has been successfully migrated from an Express.js backend with static HTML frontend to a modern **Next.js** application with **Firebase** as the backend.</p>
+
+<hr/>
+
+<h2>📂 New Project Structure</h2>
+
+<pre><code>
+Project 3/
+├── app/                          # Next.js App Router (pages &amp; routes)
+│   ├── api/
+│   │   └── orders/
+│   │       ├── route.js          # POST &amp; GET endpoints
+│   │       └── [id]/route.js     # PUT endpoint for updates
+│   ├── admin/
+│   │   └── dashboard/page.js     # Admin order management
+│   ├── rider/
+│   │   └── dashboard/page.js     # Rider order pickup
+│   ├── styles/
+│   │   └── navbar.css            # Component-specific styles
+│   ├── menu/page.js              # Menu page
+│   ├── booking/page.js           # Booking reservation
+│   ├── contact/page.js           # Contact form
+│   ├── login/page.js             # Login page
+│   ├── register/page.js          # Registration page
+│   ├── layout.js                 # Root layout (global provider)
+│   ├── page.js                   # Home page
+│   └── globals.css               # Global styles &amp; theme
+│
+├── components/
+│   ├── Navbar.js                 # Navigation component
+│   └── MenuCard.js               # Menu items display
+│
+├── lib/
+│   ├── firebase.js               # Client Firebase config
+│   └── firebaseAdmin.js          # Server Firebase Admin SDK
+│
+├── config/
+│   └── serviceAccountKey.json    # Firebase credentials (secure)
+│
+├── .env.local                    # Environment variables
+├── next.config.js                # Next.js configuration
+├── jsconfig.json                 # JS path aliases
+├── package.json                  # Dependencies
+├── docs/
+│   ├── migration/MIGRATION.md    # Migration guide
+│   └── planning/TODO.md          # Implementation checklist
+├── .gitignore                    # Git ignore rules
+└── README.md (existing)
+</code></pre>
+
+<hr/>
+
+<h2>🔄 What Was Changed</h2>
+
+<p>| Old (Express) | New (Next.js) | Location |</p>
+<p>|---|---|---|</p>
+<p>| <code>server/index.js<code> | API Routes | <code>app/api/orders/<code> |</p>
+<p>| <code>client/pages/*.html<code> | React Pages | <code>app/*/page.js<code> |</p>
+<p>| <code>client/assets/js/main.js<code> | React Components | <code>components/<code> |</p>
+<p>| <code>config/firebaseAdmin.js<code> | <code>lib/firebaseAdmin.js<code> | <code>lib/<code> |</p>
+<p>| Client JS module | <code>lib/firebase.js<code> | <code>lib/<code> |</p>
+<p>| Express routes | Next.js API routes | <code>app/api/<code> |</p>
+
+<hr/>
+
+<h2>✨ Key Features Added</h2>
+
+<p>✅ **React Components** - Reusable, interactive UI  </p>
+<p>✅ **Server-side Rendering** (optional) - Better SEO  </p>
+<p>✅ **API Routes** - Secure backend endpoints  </p>
+<p>✅ **Dark Mode Toggle** - User preference stored in localStorage  </p>
+<p>✅ **Mobile Navigation** - Responsive hamburger menu  </p>
+<p>✅ **Admin Dashboard** - View and manage orders  </p>
+<p>✅ **Rider Dashboard** - Track available orders  </p>
+<p>✅ **Form Pages** - Booking, Contact, Login, Register  </p>
+<p>✅ **Firebase Integration** - Both client and server-side  </p>
+
+<hr/>
+
+<h2>🚀 Next Steps to Complete</h2>
+
+<h3>1. Install Dependencies</h3>
+<pre><code>
+cd &quot;/home/nick/Documents/web/Project 3&quot;
+npm install
+</code></pre>
+
+<h3>2. Set Up Firebase</h3>
+<ul>
+<li>Make sure `.env.local` has your Firebase credentials</li>
+<li>Ensure `config/serviceAccountKey.json` is present (⚠️ never commit!)</li>
+</ul>
+
+<h3>3. Run Development Server</h3>
+<pre><code>
+npm run dev
+</code></pre>
+<p>Visit: <code>http://localhost:3000<code></p>
+
+<h3>4. Complete These Features</h3>
+<ul>
+<li>[ ] Firebase Authentication (Login/Register pages)</li>
+<li>[ ] Add to Cart functionality</li>
+<li>[ ] Form submissions to Firestore</li>
+<li>[ ] Real-time order updates</li>
+<li>[ ] Payment integration</li>
+<li>[ ] Deployment setup</li>
+</ul>
+
+<hr/>
+
+<h2>📝 API Routes Reference</h2>
+
+<h3>Create Order</h3>
+<pre><code>
+POST /api/orders
+Body: { userId, items, total }
+Response: { orderId }
+</code></pre>
+
+<h3>Get All Orders</h3>
+<pre><code>
+GET /api/orders
+Response: [{ id, userId, items, total, status, createdAt }]
+</code></pre>
+
+<h3>Update Order</h3>
+<pre><code>
+PUT /api/orders/[id]
+Body: { status }
+Response: { message }
+</code></pre>
+
+<hr/>
+
+<h2>🔒 Security Notes</h2>
+
+<p>⚠️ **Never commit these files:**</p>
+<ul>
+<li>`config/serviceAccountKey.json`</li>
+<li>`.env.local`</li>
+</ul>
+
+<p>✅ **Already configured:**</p>
+<ul>
+<li>`.gitignore` added to prevent accidental commits</li>
+<li>Environment variables separated from code</li>
+<li>Admin SDK used only server-side</li>
+</ul>
+
+<hr/>
+
+<h2>📚 Documentation Files</h2>
+
+<ul>
+<li>**docs/migration/MIGRATION.md** - Detailed migration guide</li>
+<li>**docs/planning/TODO.md** - Implementation checklist</li>
+<li>**This file** - Quick reference</li>
+</ul>
+
+<hr/>
+
+<h2>🎉 You&#x27;re Ready!</h2>
+
+<p>The migration is complete. Your Next.js + Firebase app is ready for development. Start with the TODO list and implement the remaining features!</p>
+
+<p>Need help? Check <code>docs/migration/MIGRATION.md<code> for detailed instructions.</p>
+<h2>Migration Guide</h2>
+<h1>Project 3 - Next.js with Firebase Migration</h1>
+
+<p>This project has been successfully migrated from Express.js to Next.js with Firebase as the backend.</p>
+
+<h2>📁 Project Structure</h2>
+
+<pre><code>
+app/
+  ├── api/                    # API routes (migrated from Express backend)
+  │   └── orders/
+  │       ├── route.js        # POST /api/orders, GET /api/orders
+  │       └── [id]/route.js   # PUT /api/orders/:id
+  ├── admin/
+  │   └── dashboard/          # Admin dashboard (manage orders)
+  ├── rider/
+  │   └── dashboard/          # Rider dashboard (pickup orders)
+  ├── layout.js               # Root layout with Navbar
+  ├── page.js                 # Home page
+  ├── menu/page.js            # Menu page
+  ├── booking/page.js         # Booking page
+  ├── contact/page.js         # Contact page
+  ├── login/page.js           # Login page
+  ├── register/page.js        # Register page
+  └── globals.css             # Global styles
+
+components/
+  ├── Navbar.js               # Navigation component
+  └── MenuCard.js             # Menu items component
+
+lib/
+  ├── firebase.js             # Client-side Firebase config
+  └── firebaseAdmin.js        # Server-side Firebase Admin SDK
+
+config/
+  └── serviceAccountKey.json  # Firebase Admin credentials (keep secure!)
+</code></pre>
+
+<h2>🚀 Getting Started</h2>
+
+<h3>Prerequisites</h3>
+<ul>
+<li>Node.js 18+ installed</li>
+<li>Firebase project created</li>
+<li>`.env.local` file with Firebase credentials</li>
+</ul>
+
+<h3>Installation</h3>
+
+<ol>
+<li>Install dependencies:</li>
+<pre><code>
+npm install
+</code></pre>
+</ol>
+
+<ol>
+<li>Ensure `.env.local` exists with your Firebase config:</li>
+<pre><code>
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+FIREBASE_ADMIN_SDK_KEY=./config/serviceAccountKey.json
+</code></pre>
+</ol>
+
+<ol>
+<li>Ensure `config/serviceAccountKey.json` is in place (never commit this file!)</li>
+</ol>
+
+<h3>Running the Development Server</h3>
+
+<pre><code>
+npm run dev
+</code></pre>
+
+<p>Visit <code>http://localhost:3000<code> in your browser.</p>
+
+<h2>📝 What&#x27;s Changed</h2>
+
+<h3>From Express to Next.js API Routes</h3>
+
+<p>**Old (Express):**</p>
+<pre><code>
+app.post(&quot;/api/orders/create&quot;, async (req, res) =&gt; {
+  // Handle order creation
+});
+</code></pre>
+
+<p>**New (Next.js):**</p>
+<pre><code>
+// app/api/orders/route.js
+export const POST = async (req) =&gt; {
+  // Handle order creation
+};
+</code></pre>
+
+<h3>Pages Migrated</h3>
+<ul>
+<li>✅ Home page → `app/page.js`</li>
+<li>✅ Menu → `app/menu/page.js`</li>
+<li>✅ Booking → `app/booking/page.js`</li>
+<li>✅ Contact → `app/contact/page.js`</li>
+<li>✅ Login → `app/login/page.js`</li>
+<li>✅ Register → `app/register/page.js`</li>
+<li>✅ Admin Dashboard → `app/admin/dashboard/page.js`</li>
+<li>✅ Rider Dashboard → `app/rider/dashboard/page.js`</li>
+</ul>
+
+<h3>Frontend Changes</h3>
+<ul>
+<li>Static HTML pages converted to React components</li>
+<li>Client-side navigation using Next.js `Link` component</li>
+<li>Dark mode toggle using localStorage and state management</li>
+<li>Responsive hamburger menu</li>
+</ul>
+
+<h2>🔐 Firebase Integration</h2>
+
+<h3>Client-side (Browser)</h3>
+<ul>
+<li>Used in pages for authentication, real-time updates</li>
+<li>Located in: `lib/firebase.js`</li>
+</ul>
+
+<h3>Server-side (API Routes)</h3>
+<ul>
+<li>Used in API routes for secure database operations</li>
+<li>Located in: `lib/firebaseAdmin.js`</li>
+</ul>
+
+<h2>📚 Next Steps</h2>
+
+<ol>
+<li>**Implement Authentication:**</li>
+</ol>
+<p>   - Update Login/Register pages to use Firebase Auth</p>
+<p>   - Add auth context for global state</p>
+
+<ol>
+<li>**Add Cart Functionality:**</li>
+</ol>
+<p>   - Create a cart management system</p>
+<p>   - Update MenuCard component</p>
+
+<ol>
+<li>**Complete Forms:**</li>
+</ol>
+<p>   - Connect Booking and Contact forms to Firebase</p>
+<p>   - Add form validation</p>
+
+<ol>
+<li>**Deploy:**</li>
+</ol>
+<p>   <code><code><code>bash</p>
+<p>   npm run build</p>
+<p>   npm start</p>
+<p>   <code><code><code></p>
+
+<h2>📦 Build &amp; Production</h2>
+
+<pre><code>
+npm run build    # Build for production
+npm start        # Start production server
+npm run lint     # Run ESLint
+</code></pre>
+
+<h2>🔗 Useful Links</h2>
+<ul>
+<li>[Next.js Documentation](https://nextjs.org/docs)</li>
+<li>[Firebase Documentation](https://firebase.google.com/docs)</li>
+<li>[Next.js API Routes](https://nextjs.org/docs/app/building-your-application/routing/route-handlers)</li>
+</ul>
+<h2>Planning: Day 1 Structure</h2>
+<p>restaurant-system/</p>
+<p>│</p>
+<p>├── client/</p>
+<p>│   ├── assets/</p>
+<p>│   │   ├── css/</p>
+<p>│   │   │   └── style.css</p>
+<p>│   │   └── js/</p>
+<p>│   │       ├── firebase.js</p>
+<p>│   │       ├── auth.js</p>
+<p>│   │       └── main.js</p>
+<p>│   │</p>
+<p>│   ├── pages/</p>
+<p>│   │   ├── home.html</p>
+<p>│   │   ├── menu.html</p>
+<p>│   │   ├── booking.html</p>
+<p>│   │   ├── contact.html</p>
+<p>│   │   ├── login.html</p>
+<p>│   │   ├── register.html</p>
+<p>│</p>
+<p>└── server/</p>
+<p>    ├── index.js</p>
+<p>    └── config/</p>
+<p>        ├── firebaseAdmin.js</p>
+<p>        └── serviceAccountKey.json</p>
+<h2>Planning: TODO List</h2>
+<h1>TODO: Next.js Migration Checklist</h1>
+
+<h2>Completed ✅</h2>
+<ul>
+<li>[x] Next.js project structure setup</li>
+<li>[x] Package.json updated with Next.js dependencies</li>
+<li>[x] Environment variables configured (.env.local)</li>
+<li>[x] Firebase client config created (lib/firebase.js)</li>
+<li>[x] Firebase Admin SDK config created (lib/firebaseAdmin.js)</li>
+<li>[x] Layout and global styles created</li>
+<li>[x] Navbar component created with dark mode toggle</li>
+<li>[x] Home page migrated</li>
+<li>[x] Menu page migrated</li>
+<li>[x] Booking page migrated</li>
+<li>[x] Contact page migrated</li>
+<li>[x] Login page migrated</li>
+<li>[x] Register page migrated</li>
+<li>[x] Admin dashboard created</li>
+<li>[x] Rider dashboard created</li>
+<li>[x] API routes created for orders CRUD</li>
+<li>[x] Migration documentation created</li>
+</ul>
+
+<h2>In Progress 🔄</h2>
+<p>None</p>
+
+<h2>TODO - Future Implementation 📋</h2>
+<ul>
+<li>[ ] Connect Login/Register to Firebase Auth</li>
+<li>[ ] Add Firebase Auth context for global user state</li>
+<li>[ ] Implement Cart functionality with localStorage</li>
+<li>[ ] Connect form submissions to Firestore</li>
+<li>[ ] Add form validation and error handling</li>
+<li>[ ] Payment integration (Stripe/M-Pesa)</li>
+<li>[ ] Real-time order updates with Firestore listeners</li>
+<li>[ ] Image upload functionality for menu items</li>
+<li>[ ] Email notifications on order status</li>
+<li>[ ] Deploy to Vercel/Firebase Hosting</li>
+<li>[ ] Set up CI/CD pipeline</li>
+<li>[ ] Add unit tests</li>
+<li>[ ] Add E2E tests</li>
+<li>[ ] Performance optimization</li>
+<li>[ ] Analytics integration</li>
+</ul>
+
+<h2>Files No Longer Needed</h2>
+<ul>
+<li>[x] root-level `server.js` (reorganized under `server/index.js`)</li>
+<li>[x] client/pages/*.html (replaced by app/*.js pages)</li>
+<li>[x] client/js/*.js (reorganized under client/assets/js)</li>
+<li>[x] config/firebaseAdmin.js (reorganized under server/config)</li>
+</ul>
+
+<h2>Keep</h2>
+<ul>
+<li>[x] config/serviceAccountKey.json (needed for server-side Firebase access)</li>
+<li>[x] .env.local (for environment variables)</li>
+</ul>
+</body></html>

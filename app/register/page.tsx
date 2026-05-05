@@ -2,7 +2,7 @@
 
 import type { FormEvent, JSX } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -25,6 +25,9 @@ const storeSessionUser = (user: SessionUser) => {
 
 export default function RegisterPage(): JSX.Element {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const requestedRole = searchParams.get('role');
+  const isRiderRegistration = requestedRole === 'rider';
   const [status, setStatus] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -51,7 +54,7 @@ export default function RegisterPage(): JSX.Element {
       const response = await fetch('/api/auth/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken }),
+        body: JSON.stringify({ idToken, role: requestedRole }),
       });
       const data = (await response.json()) as { user?: SessionUser; error?: string };
 
@@ -66,6 +69,16 @@ export default function RegisterPage(): JSX.Element {
         storeSessionUser(data.user);
       }
 
+      if (data.user?.role === 'admin') {
+        router.push('/admin/dashboard');
+        return;
+      }
+
+      if (data.user?.role === 'rider') {
+        router.push('/rider/dashboard');
+        return;
+      }
+
       router.push('/orders');
     } catch (error: unknown) {
       setSubmitting(false);
@@ -78,9 +91,11 @@ export default function RegisterPage(): JSX.Element {
       <section className="form-shell">
         <div>
           <p className="eyebrow">Create account</p>
-          <h1>Start ordering in minutes</h1>
+          <h1>{isRiderRegistration ? 'Join the rider team' : 'Start ordering in minutes'}</h1>
           <p className="section-copy">
-            Registration uses Firebase Auth for identity, then stores your app profile and role data in Postgres.
+            {isRiderRegistration
+              ? 'Register as a rider to receive delivery assignments and access the rider dashboard.'
+              : 'Registration uses Firebase Auth for identity, then stores your app profile and role data in Postgres.'}
           </p>
         </div>
         <form onSubmit={handleSubmit} className="card">

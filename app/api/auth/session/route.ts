@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { SESSION_COOKIE } from '@/lib/auth';
+import { parseUserRole } from '@/lib/validation';
 
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
 
@@ -20,7 +21,7 @@ export const POST = async (request: Request) => {
       import('@/lib/firebaseAdmin'),
       import('@/lib/db'),
     ]);
-    const body = (await request.json()) as { idToken?: string };
+    const body = (await request.json()) as { idToken?: string; role?: string };
 
     if (!body.idToken) {
       return Response.json({ error: 'Missing Firebase ID token' }, { status: 400 });
@@ -30,7 +31,8 @@ export const POST = async (request: Request) => {
     const sessionCookieValue = await adminAuth.createSessionCookie(body.idToken, {
       expiresIn: SESSION_DURATION_MS,
     });
-    const user = await upsertUserFromToken(decoded);
+    const requestedRole = parseUserRole(body.role) ?? undefined;
+    const user = await upsertUserFromToken(decoded, requestedRole);
 
     const cookieStore = await cookies();
     cookieStore.set(SESSION_COOKIE, sessionCookieValue, {
