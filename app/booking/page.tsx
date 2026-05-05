@@ -51,12 +51,12 @@ export default function BookingPage(): JSX.Element {
           </p>
         </div>
         <form onSubmit={handleSubmit} className="card">
-          <input name="name" type="text" placeholder="Your name" required />
-          <input name="email" type="email" placeholder="Your email" required />
-          <input name="date" type="date" required />
-          <input name="time" type="time" required />
-          <input name="guests" type="number" placeholder="Number of guests" min="1" max="20" required />
-          <textarea name="notes" placeholder="Special requests" rows={4} />
+          <input name="name" type="text" autoComplete="name" placeholder="Your name" required />
+          <input name="email" type="email" autoComplete="email" placeholder="Your email" required />
+          <input name="date" type="date" autoComplete="off" required />
+          <input name="time" type="time" autoComplete="off" required />
+          <input name="guests" type="number" autoComplete="off" placeholder="Number of guests" min="1" max="20" required />
+          <textarea name="notes" autoComplete="off" placeholder="Special requests" rows={4} />
           {status ? <p className="status-banner">{status}</p> : null}
           <button type="submit" className="btn" disabled={submitting}>
             {submitting ? 'Saving...' : 'Reserve table'}

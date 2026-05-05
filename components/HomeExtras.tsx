@@ -202,7 +202,7 @@ export default function HomeExtras(): JSX.Element {
           <form className="review-form" onSubmit={handleSubmit}>
             <label htmlFor="review-name">
               Name
-              <input id="review-name" name="name" value={name} onChange={(event) => setName(event.target.value)} placeholder="Your name" />
+              <input id="review-name" name="name" autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} placeholder="Your name" />
             </label>
 
             <label htmlFor="review-rating">
@@ -221,6 +221,7 @@ export default function HomeExtras(): JSX.Element {
               <textarea
                 id="review-comment"
                 name="comment"
+                autoComplete="off"
                 value={comment}
                 onChange={(event) => setComment(event.target.value)}
                 placeholder="Share your experience"

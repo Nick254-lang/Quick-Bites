@@ -99,12 +99,13 @@ function RegisterPageContent(): JSX.Element {
           </p>
         </div>
         <form onSubmit={handleSubmit} className="card">
-          <input name="name" type="text" placeholder="Full name" required />
-          <input name="email" type="email" placeholder="Email" required />
-          <input name="password" type="password" placeholder="Password" minLength={8} required />
+          <input name="name" type="text" autoComplete="name" placeholder="Full name" required />
+          <input name="email" type="email" autoComplete="email" placeholder="Email" required />
+          <input name="password" type="password" autoComplete="new-password" placeholder="Password" minLength={8} required />
           <input
             name="confirmPassword"
             type="password"
+            autoComplete="new-password"
             placeholder="Confirm password"
             minLength={8}
             required

@@ -48,9 +48,9 @@ export default function ContactPage(): JSX.Element {
           </p>
         </div>
         <form onSubmit={handleSubmit} className="card">
-          <input name="name" type="text" placeholder="Your name" required />
-          <input name="email" type="email" placeholder="Your email" required />
-          <textarea name="message" placeholder="How can we help?" rows={6} required />
+          <input name="name" type="text" autoComplete="name" placeholder="Your name" required />
+          <input name="email" type="email" autoComplete="email" placeholder="Your email" required />
+          <textarea name="message" autoComplete="off" placeholder="How can we help?" rows={6} required />
           {status ? <p className="status-banner">{status}</p> : null}
           <button type="submit" className="btn" disabled={submitting}>
             {submitting ? 'Sending...' : 'Send message'}

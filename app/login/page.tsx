@@ -86,8 +86,8 @@ export default function LoginPage(): JSX.Element {
           </p>
         </div>
         <form onSubmit={handleSubmit} className="card">
-          <input name="email" type="email" placeholder="Email" required />
-          <input name="password" type="password" placeholder="Password" required />
+          <input name="email" type="email" autoComplete="email" placeholder="Email" required />
+          <input name="password" type="password" autoComplete="current-password" placeholder="Password" required />
           {status ? <p className="status-banner status-error">{status}</p> : null}
           <button type="submit" className="btn" disabled={submitting}>
             {submitting ? 'Signing in...' : 'Log in'}
