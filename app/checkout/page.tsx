@@ -120,8 +120,10 @@ export default function CheckoutPage(): JSX.Element {
           <h2>Delivery details</h2>
           {!user ? <p className="section-copy">You will be redirected to log in when you place the order.</p> : null}
           <form onSubmit={handleSubmit}>
-            <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Full name" required />
+            <input id="checkout-name" name="name" value={name} onChange={(event) => setName(event.target.value)} placeholder="Full name" required />
             <input
+              id="checkout-email"
+              name="email"
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
@@ -129,6 +131,8 @@ export default function CheckoutPage(): JSX.Element {
               required
             />
             <textarea
+              id="checkout-address"
+              name="address"
               value={deliveryAddress}
               onChange={(event) => setDeliveryAddress(event.target.value)}
               placeholder="Delivery address"
@@ -136,6 +140,8 @@ export default function CheckoutPage(): JSX.Element {
               required
             />
             <textarea
+              id="checkout-notes"
+              name="notes"
               value={notes}
               onChange={(event) => setNotes(event.target.value)}
               placeholder="Add order notes"

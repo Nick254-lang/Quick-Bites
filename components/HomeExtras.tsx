@@ -200,14 +200,14 @@ export default function HomeExtras(): JSX.Element {
           </div>
 
           <form className="review-form" onSubmit={handleSubmit}>
-            <label>
+            <label htmlFor="review-name">
               Name
-              <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Your name" />
+              <input id="review-name" name="name" value={name} onChange={(event) => setName(event.target.value)} placeholder="Your name" />
             </label>
 
-            <label>
+            <label htmlFor="review-rating">
               Rating
-              <select value={rating} onChange={(event) => setRating(Number(event.target.value))}>
+              <select id="review-rating" name="rating" value={rating} onChange={(event) => setRating(Number(event.target.value))}>
                 {[5, 4, 3, 2, 1].map((value) => (
                   <option key={value} value={value}>
                     {value} star{value > 1 ? 's' : ''}
@@ -216,9 +216,11 @@ export default function HomeExtras(): JSX.Element {
               </select>
             </label>
 
-            <label>
+            <label htmlFor="review-comment">
               Review
               <textarea
+                id="review-comment"
+                name="comment"
                 value={comment}
                 onChange={(event) => setComment(event.target.value)}
                 placeholder="Share your experience"
